@@ -180,7 +180,7 @@ def run(args, client=None):
     cases=json.loads(args.dataset.read_text());manifest=json.loads((ROOT/'dataset-manifest.json').read_text())
     assert hashlib.sha256(args.dataset.read_bytes()).hexdigest()==manifest[args.dataset.name]
     if getattr(args,'limit',None):cases=cases[:args.limit]  # 스모크 테스트용. 정식 평가는 limit 없이
-    tag={'name':args.model} if client else next(m for m in api('/api/tags')['models'] if m['name']==args.model)
+    tag={'name':args.model} if client else next(m for m in api('/api/tags')['models'] if m['name'] in (args.model,args.model+':latest'))  # 태그 없는 별칭은 :latest로 나열됨
     if not client and api('/api/ps')['models']:raise RuntimeError('Another model is loaded; avoiding competing resource measurement')
     alias='bmt-eval-'+uuid.uuid4().hex[:12]+':latest'
     meta={'started_at':datetime.now(timezone.utc).isoformat(),'model':tag,'ollama':None if client else api('/api/version'),'profile':args.profile,'dataset_hash':manifest[args.dataset.name],'source_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),'system_prompt':BASE+(IMPROVED if args.profile=='improved' else ''),'alias':alias,'num_ctx':args.num_ctx,'num_predict':2048,'temperature':0,'think':args.think,'retries':0,'limit':getattr(args,'limit',None)}

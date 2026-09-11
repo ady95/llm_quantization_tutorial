@@ -25,7 +25,7 @@ def run(output, model='qwen3.8:27b', file_contract=True, think=None, num_ctx=163
     cases=[c for c in cases if c['id'] in ids]
     alias='bmt-e2e-'+uuid.uuid4().hex[:12]+':latest'
     if not client and api('/api/ps')['models']:raise RuntimeError('Another model is loaded')
-    tag={'name':model} if client else next(m for m in api('/api/tags')['models'] if m['name']==model)
+    tag={'name':model} if client else next(m for m in api('/api/tags')['models'] if m['name'] in (model,model+':latest'))
     meta={'model':tag,'alias':alias,'dataset_hash':hashlib.sha256((root/'cases.json').read_bytes()).hexdigest(),'prompt':BASE+IMPROVED+contract,'num_ctx':num_ctx,'max_output':4096,'scope':'six selected development cases, actual OpenCode file tools, no native tool-choice subtest'}
     meta['source_sha256']=hashlib.sha256(Path(__file__).read_bytes()).hexdigest()
     if client:meta.update(client.metadata())
