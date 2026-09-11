@@ -1,0 +1,28 @@
+{
+ "host": "web01",
+ "reported_at": "2026-09-11T02:14:00+09:00",
+ "symptom": "웹 서비스 응답 없음",
+ "evidence": [
+  {
+   "id": "E1",
+   "text": "Sep 11 02:10:31 web01 kernel: EXT4-fs warning (device sda1): ext4_dx_add_entry: Directory index full!"
+  },
+  {
+   "id": "E2",
+   "text": "Sep 11 02:11:02 web01 nginx[1123]: 2026/09/11 02:11:02 [crit] 1123#0: *8812 open() \"/var/log/nginx/access.log\" failed (28: No space left on device)"
+  },
+  {
+   "id": "E3",
+   "text": "Sep 11 02:11:05 web01 systemd[1]: nginx.service: Main process exited, code=exited, status=1/FAILURE"
+  },
+  {
+   "id": "E4",
+   "text": "Filesystem      Size  Used Avail Use% Mounted on\n/dev/sda1        40G   40G     0 100% /"
+  },
+  {
+   "id": "E5",
+   "text": "Sep 10 23:40:12 web01 sshd[990]: Accepted publickey for deploy from 192.0.2.5"
+  }
+ ],
+ "request": "직접 원인을 판단하고, 근거 ID와 원문 인용을 포함한 answer.json을 작성하세요. 스키마: {\"verdict\": \"confirmed|candidates|insufficient\", \"causes\": [{\"cause\": str, \"evidence_ids\": [str], \"quote\": str}], \"actions\": [str]}"
+}

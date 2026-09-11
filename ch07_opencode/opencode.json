@@ -1,0 +1,93 @@
+{
+ "$schema": "https://opencode.ai/config.json",
+ "autoupdate": false,
+ "share": "disabled",
+ "snapshot": false,
+ "plugin": [],
+ "lsp": false,
+ "enabled_providers": [
+  "ollama-local"
+ ],
+ "model": "ollama-local/qwen27b-q4km-32k",
+ "small_model": "ollama-local/qwen27b-q4km-32k",
+ "provider": {
+  "ollama-local": {
+   "npm": "@ai-sdk/openai-compatible",
+   "name": "Ollama (local)",
+   "options": {
+    "baseURL": "http://127.0.0.1:11434/v1"
+   },
+   "models": {
+    "qwen27b-q4km-32k": {
+     "name": "qwen27b-q4km-32k",
+     "limit": {
+      "context": 32768,
+      "output": 4096
+     }
+    },
+    "qwen27b-ud-iq3xxs-32k": {
+     "name": "qwen27b-ud-iq3xxs-32k",
+     "limit": {
+      "context": 32768,
+      "output": 4096
+     }
+    },
+    "qwen27b-gsq-iq3xxs-32k": {
+     "name": "qwen27b-gsq-iq3xxs-32k",
+     "limit": {
+      "context": 32768,
+      "output": 4096
+     }
+    },
+    "qwen27b-ad-iq2xs-32k": {
+     "name": "qwen27b-ad-iq2xs-32k",
+     "limit": {
+      "context": 32768,
+      "output": 4096
+     }
+    }
+   }
+  }
+ },
+ "permission": {
+  "*": "deny",
+  "read": "allow",
+  "edit": "allow",
+  "write": "allow",
+  "glob": "allow",
+  "grep": "allow",
+  "list": "allow",
+  "external_directory": "deny",
+  "task": "deny",
+  "bash": "deny",
+  "webfetch": "deny",
+  "websearch": "deny",
+  "skill": "deny",
+  "question": "deny"
+ },
+ "agent": {
+  "lab": {
+   "mode": "primary",
+   "description": "파일 읽기/쓰기 실습 에이전트",
+   "steps": 8,
+   "temperature": 0,
+   "permission": {
+    "*": "deny",
+    "read": "allow",
+    "edit": "allow",
+    "write": "allow",
+    "glob": "allow",
+    "grep": "allow",
+    "list": "allow",
+    "external_directory": "deny",
+    "task": "deny",
+    "bash": "deny",
+    "webfetch": "deny",
+    "websearch": "deny",
+    "skill": "deny",
+    "question": "deny"
+   },
+   "prompt": "당신은 서버 운영 보조 에이전트입니다. 작업 디렉터리의 파일만 읽고 쓸 수 있습니다. 지시받은 결과 파일을 반드시 파일 도구로 작성해야 작업이 완료됩니다. 대화창에 JSON을 출력하는 것은 완료가 아닙니다."
+  }
+ }
+}
