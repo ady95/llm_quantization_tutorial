@@ -50,7 +50,7 @@ def run(output, model='qwen3.8:27b', file_contract=True, think=None, num_ctx=163
             config_path=folder/'opencode.json';save(config_path,config)
             env={k:os.environ[k] for k in ('PATH','LANG','LC_ALL','TMPDIR') if k in os.environ}
             for key,name in [('XDG_CONFIG_HOME','config'),('XDG_DATA_HOME','data'),('XDG_CACHE_HOME','cache'),('XDG_STATE_HOME','state')]:env[key]=str(folder/name)
-            env['OPENCODE_CONFIG']=str(config_path);env['OPENCODE_CONFIG_DIR']=str(folder/'config-dir')
+            env['OPENCODE_CONFIG']=str(config_path);env['OPENCODE_CONFIG_DIR']=str(folder/'config-dir');(folder/'config-dir').mkdir(exist_ok=True)  # OpenCode 1.17.x는 이 디렉터리를 스스로 만들지 않음
             for key in ('OPENCODE_DISABLE_AUTOUPDATE','OPENCODE_DISABLE_MODELS_FETCH','OPENCODE_DISABLE_DEFAULT_PLUGINS','OPENCODE_DISABLE_EXTERNAL_SKILLS','OPENCODE_DISABLE_CLAUDE_CODE','OPENCODE_DISABLE_PROJECT_CONFIG','OPENCODE_DISABLE_LSP_DOWNLOAD','OPENCODE_DISABLE_SHARE'):env[key]='1'
             resolved=run_process(['opencode','--pure','debug','config'],workspace,env,60);save(folder/'resolved-config.json',resolved)
             assert resolved['returncode']==0
