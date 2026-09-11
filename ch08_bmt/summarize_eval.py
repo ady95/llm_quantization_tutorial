@@ -34,7 +34,7 @@ for name in ['baseline-v1','improved-v2','repaired-v3','holdout-v2','holdout-rep
         totals.append(total)
     s['gpu_peak_mib']=peaks;s['gpu_combined_peak_mib']=max(totals,default=0)
     s['passed_ids']=[r['id'] for r in records if r['grade']['passed']]
-    s['graded_source_hash']=report['sources']['tests/evaluation/bmt_eval.py']
+    s['graded_source_hash']=report['sources'][str(Path(__file__).resolve().parent/'bmt_eval.py')]
     report['stages'][name]=s
 for previous,current in [('baseline-v1','improved-v2'),('improved-v2','repaired-v3')]:
     if previous not in report['stages']:continue
