@@ -6,7 +6,8 @@ OUT=${1:?출력 디렉터리}; mkdir -p "$OUT"; export OLLAMA_HOST=${OLLAMA_HOST
 MODELS=${MODELS:-"ch04-q8-0 ch04-q4km ch04-iq3-xxs ch04-iq2-xxs"}
 P='리눅스 서버에서 디스크 사용률 90% 경보가 왔을 때의 대응 절차를 10단계로, 각 단계에 명령 한 줄씩 붙여 설명해 주세요.'
 for m in $MODELS; do
-  curl -s "http://$OLLAMA_HOST/api/generate" -d '{"model":"'"$m"'","keep_alive":0}' >/dev/null   # 이전 모델 내리기
+  for l in $(curl -s "http://$OLLAMA_HOST/api/ps" | python3 -c "import json,sys; print(' '.join(x['name'] for x in json.load(sys.stdin)['models']))"); do
+    curl -s "http://$OLLAMA_HOST/api/generate" -d "{\"model\":\"$l\",\"keep_alive\":0}" >/dev/null; done   # 적재된 모델 전부 내리기
   for i in 1 2 3; do
     curl -s "http://$OLLAMA_HOST/api/chat" -d "{\"model\":\"$m\",\"stream\":false,\"think\":false,\"messages\":[{\"role\":\"user\",\"content\":\"$P\"}],\"options\":{\"temperature\":0,\"num_predict\":256,\"num_ctx\":16384}}" > "$OUT/$m-$i.json"
     python3 - "$OUT/$m-$i.json" "$m" "$i" <<'PY'
