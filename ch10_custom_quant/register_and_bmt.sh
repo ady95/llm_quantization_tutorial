@@ -7,8 +7,8 @@ export OLLAMA_HOST=${OLLAMA_HOST:-127.0.0.1:11434}; export BMT_OLLAMA_PORT=${OLL
 HERE=$(cd "$(dirname "$0")" && pwd); BMT=$HERE/../ch08_bmt
 TAGS=${TAGS:-"work-IQ2_XS work-IQ3_XXS work-IQ3_XXS-protect work-IQ4_XS public-IQ3_XXS"}
 log(){ echo "[$(date +%H:%M:%S)] $*"; }
-for t in $TAGS; do f=$OUT/$NAME-$t.gguf; [ -f "$f" ] || { log "skip $t (no file)"; continue; }
-  a=ch10-$(echo "$t" | tr 'A-Z_' 'a-z-')
+for t in $TAGS; do f=$OUT/$NAME-$t.gguf; a=ch10-$(echo "$t" | tr 'A-Z_' 'a-z-')
+  if ! ollama list | grep -qE "^$a(:| )"; then [ -f "$f" ] || { log "skip $t (no file, not registered)"; continue; }; fi
   ollama list | grep -qE "^$a(:| )" || { printf 'FROM %s\nPARAMETER num_ctx 16384\nPARAMETER temperature 0\n' "$f" > "$OUT/$a.Modelfile"; log "create $a"; ollama create "$a" -f "$OUT/$a.Modelfile" > "$OUT/create-$a.log" 2>&1 || { log "  FAILED"; continue; }; }
   R=$RESULTS/$a; mkdir -p "$R"; cd "$BMT"
   [ -d "$R/improved-v2" ] || { log "bmt v2 $a"; python3 bmt_eval.py --model "$a" --profile improved --output "$R/improved-v2" > "$R/v2.log" 2>&1 || log "  v2 failed: $(tail -1 "$R/v2.log")"; }
