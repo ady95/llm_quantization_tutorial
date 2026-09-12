@@ -31,10 +31,19 @@ curl -s "http://$OLLAMA_HOST/api/show" -d '{"model":"ch04-q4km-bare"}' | python3
 ask ch04-q4km-bare bare-think true
 ask ch04-q4km-bare bare-nothink false
 
-# 2) 템플릿을 잘못 넣은 경우: 채팅 표식 없는 TEMPLATE로 덮어쓴다
-printf 'FROM %s/%s-Q4_K_M.gguf\nTEMPLATE """{{ .Prompt }}"""\n' "$OUT" "$NAME" > badtmpl.Modelfile
-create ch04-q4km-badtmpl badtmpl.Modelfile; show ch04-q4km-badtmpl
-ask ch04-q4km-badtmpl badtmpl true
+# 2) 템플릿을 잘못 넣은 경우: 다른 모델 계열(Alpaca식)의 TEMPLATE를 그대로 붙인다
+#    참고: TEMPLATE """{{ .Prompt }}""" 만 쓰면 Ollama 0.34는 "템플릿 없음"으로 보고 GGUF의 Jinja 템플릿을 그대로 쓴다(실측).
+cat > alpaca.Modelfile <<MF
+FROM $OUT/$NAME-Q4_K_M.gguf
+TEMPLATE """### Instruction:
+{{ .Prompt }}
+
+### Response:
+"""
+MF
+create ch04-q4km-alpaca alpaca.Modelfile; show ch04-q4km-alpaca
+ask ch04-q4km-alpaca alpaca-think true
+ask ch04-q4km-alpaca alpaca-nothink false
 
 # 3) 이 책의 권장 Modelfile: 문맥·온도·시스템 프롬프트 고정
 cat > q4km.Modelfile <<MF
